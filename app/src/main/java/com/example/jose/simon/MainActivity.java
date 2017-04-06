@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -259,5 +261,26 @@ public class MainActivity extends AppCompatActivity {
 
     private void error() {
         soundPool.play(sonError, 1, 1, 0, 0, 1);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, Menu.FIRST,   Menu.NONE, "Joc");
+        menu.add(0, Menu.FIRST+1, Menu.NONE, "Configuracio");
+        menu.add(0, Menu.FIRST+2, Menu.NONE, "Instruccions");
+        menu.add(0, Menu.FIRST+2, Menu.NONE, "Sortir");
+
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        /*
+        switch
+        Toast.makeText(
+                MyOptionsMenu.this,		// Qualify 'this" with Activity class
+                "You selected menu item #" + String.valueOf(item.getItemId()),
+                Toast.LENGTH_LONG).show();	// Make sure you call show() method
+        return true;
+        */
     }
 }
