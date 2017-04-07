@@ -1,6 +1,7 @@
 package com.example.jose.simon;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -18,15 +19,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 //Prueba prueba
 public class MainActivity extends AppCompatActivity {
-    int sonAzul;
-    int sonVerde;
-    int sonRojo;
-    int sonAmarillo;
-    int sonError;
+    int sonAzul, sonVerde, sonRojo, sonAmarillo, sonError;
     int duracion =500;
     int tirada=0;
+    Bundle b;
     SoundPool soundPool;
     boolean tornJugador=false;
     boolean jugando=true;
@@ -39,19 +38,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jocsimon);
-        ibAzul = (ImageView) findViewById(R.id.ibAzul);
-        ibRojo = (ImageView) findViewById(R.id.ibRojo);
-        ibAmarillo = (ImageView) findViewById(R.id.ibAmarillo);
-        ibVerde = (ImageView) findViewById(R.id.ibVerde);
-        ibPlay = (ImageView) findViewById(R.id.ibPlay);
-        tvPuntos = (TextView) findViewById(R.id.tvPuntos);
-        tvPuntuacio = (TextView) findViewById(R.id.tvPuntuacio);
+        prepareBundle();
+        initComponents();
         createSoundPool();
-        sonAzul = soundPool.load(this, R.raw.sounds_01,1);
-        sonVerde = soundPool.load(this, R.raw.sounds_02, 1);
-        sonRojo = soundPool.load(this, R.raw.sounds_03, 1);
-        sonAmarillo = soundPool.load(this, R.raw.sounds_04, 1);
-        sonError = soundPool.load(this, R.raw.error, 1);
+        loadSounds();
+        prepareListener();
+
+    }
+
+    private void prepareBundle() {
+        b=this.getIntent().getExtras();
+        if(b!=null){
+            b = new Bundle();
+        }
+    }
+
+    private void prepareListener() {
         listenerColor = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,7 +89,24 @@ public class MainActivity extends AppCompatActivity {
         ibAmarillo.setOnClickListener(listenerColor);
         ibVerde.setOnClickListener(listenerColor);
         ibPlay.setOnClickListener(listenerColor);
+    }
 
+    private void loadSounds() {
+        sonAzul = soundPool.load(this, R.raw.sounds_01,1);
+        sonVerde = soundPool.load(this, R.raw.sounds_02, 1);
+        sonRojo = soundPool.load(this, R.raw.sounds_03, 1);
+        sonAmarillo = soundPool.load(this, R.raw.sounds_04, 1);
+        sonError = soundPool.load(this, R.raw.error, 1);
+    }
+
+    private void initComponents() {
+        ibAzul = (ImageView) findViewById(R.id.ibAzul);
+        ibRojo = (ImageView) findViewById(R.id.ibRojo);
+        ibAmarillo = (ImageView) findViewById(R.id.ibAmarillo);
+        ibVerde = (ImageView) findViewById(R.id.ibVerde);
+        ibPlay = (ImageView) findViewById(R.id.ibPlay);
+        tvPuntos = (TextView) findViewById(R.id.tvPuntos);
+        tvPuntuacio = (TextView) findViewById(R.id.tvPuntuacio);
     }
 
 
@@ -260,8 +279,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void error() {
+
         soundPool.play(sonError, 1, 1, 0, 0, 1);
+        init();
     }
+
+    private void init() {
+        tirada =0;
+        tornJugador=false;
+        jugando=true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -274,13 +302,50 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*
-        switch
-        Toast.makeText(
-                MyOptionsMenu.this,		// Qualify 'this" with Activity class
-                "You selected menu item #" + String.valueOf(item.getItemId()),
-                Toast.LENGTH_LONG).show();	// Make sure you call show() method
+
+        switch(item.getItemId()){
+
+            case 1:
+                initGame();
+                break;
+            case 2:
+                initConfig();
+                break;
+            case 3:
+                initInstructions();
+                break;
+            case 4:
+                exitApp();
+                break;
+
+
+
+        }
         return true;
-        */
+
+    }
+
+    private void initInstructions() {
+        Intent i = new Intent(this, Instruccions.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
+
+    private void initConfig() {
+        Intent i = new Intent(this, Instruccions.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
+
+    private void initGame() {
+        Intent i = new Intent(this, Instruccions.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
+
+    private void exitApp() {
+        Intent i = new Intent(this, Instruccions.class);
+        i.putExtras(b);
+        startActivity(i);
     }
 }
