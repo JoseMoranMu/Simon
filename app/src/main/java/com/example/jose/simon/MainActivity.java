@@ -2,6 +2,7 @@ package com.example.jose.simon;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jocsimon);
+        score = new BBDD(this.getApplicationContext(), "Score", null, 1);
         prepareBundle();
         initComponents();
         initLayout();
@@ -359,7 +361,23 @@ public class MainActivity extends AppCompatActivity {
         }
 
         this.dbScore.close();
-        
+        Cursor c;
+        //Abrir para leer.
+        dbScore = score.getReadableDatabase();
+
+        c = dbScore.rawQuery("SELECT * FROM Puntuacion", null);
+        if (c.moveToFirst())
+        {
+            do
+            {
+
+                String nombre = c.getString(0);
+                int puntos = c.getInt(1);
+                System.out.println(nombre+" "+puntos);
+            } while (c.moveToNext());
+
+            c.close();
+        }
     }
 
     private void init() {
