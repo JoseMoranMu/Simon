@@ -2,6 +2,7 @@ package com.example.jose.simon;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,18 +25,18 @@ import java.util.Random;
 
 //Prueba prueba
 public class MainActivity extends AppCompatActivity {
-    int sonAzul, sonVerde, sonRojo, sonAmarillo, sonError;
-    int duracion =500;
-    int tirada=0;
+    int sonAzul, sonVerde, sonRojo, sonAmarillo, sonError, duracion =500,tirada=0;
     Bundle b;
     SoundPool soundPool;
-    boolean tornJugador=false;
-    boolean jugando=true;
+    boolean tornJugador=false,jugando=false,musicaOn=false;
+    Button musica;
     ImageView ibAzul,ibRojo,ibAmarillo,ibVerde,ibPlay;
     TextView tvJugador, tvPuntos;
     View.OnClickListener listenerColor;
     ArrayList<Integer> tiradesJugador = new ArrayList<>();
     ArrayList<Integer> tiradesMaquina = new ArrayList<>();
+    BBDD score;
+    SQLiteDatabase dbScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void prepareBundle() {
         b=this.getIntent().getExtras();
-        if(b!=null){
+        if(b==null){
             b = new Bundle();
             b.putString("user","jugador");
             b.putString("music","");
@@ -113,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
                     comprovatirada();
                 }else{
                     if (v.getId() == R.id.ibPlay){
-                        ibPlay.setVisibility(View.VISIBLE);
+                        jugando=true;
+                        ibPlay.setVisibility(View.INVISIBLE);
                         reprodueixSonsMaquina();
                     }
 
@@ -147,6 +150,29 @@ public class MainActivity extends AppCompatActivity {
         ibPlay = (ImageView) findViewById(R.id.ibPlay);
         tvPuntos = (TextView) findViewById(R.id.tvPuntos);
         tvJugador = (TextView) findViewById(R.id.tvJugador);
+        musica = (Button) findViewById(R.id.musica);
+        musica.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMusic();
+            }
+        });
+    }
+
+    private void startMusic() {
+        if(!b.getString("music").equals("")) {
+            if (musicaOn) {
+                Intent i = new Intent(getApplicationContext(), ServicioMusica.class);
+                stopService(i);
+                musicaOn = false;
+            } else {
+                Intent i = new Intent(getApplicationContext(), ServicioMusica.class);
+                i.putExtras(b);
+                startService(i);
+                musicaOn = true;
+            }
+        }
+
     }
 
 
@@ -325,7 +351,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveDB() {
+        this.dbScore = this.score.getWritableDatabase();
 
+        if (this.dbScore != null)
+        {
+            this.dbScore.execSQL("INSERT INTO Puntuacion (Nombre,Puntuacion) VALUES ('" + b.getString("user") + "' , "+tiradesMaquina.size()+")");
+        }
+
+        this.dbScore.close();
+        
     }
 
     private void init() {
@@ -350,7 +384,6 @@ public class MainActivity extends AppCompatActivity {
         switch(item.getItemId()){
 
             case 1:
-                initGame();
                 break;
             case 2:
                 initConfig();
@@ -376,20 +409,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initConfig() {
-        Intent i = new Intent(this, Instruccions.class);
+        Intent i = new Intent(this, Configuracion.class);
         i.putExtras(b);
         startActivity(i);
     }
 
-    private void initGame() {
-        Intent i = new Intent(this, Instruccions.class);
-        i.putExtras(b);
-        startActivity(i);
-    }
 
     private void exitApp() {
-        Intent i = new Intent(this, Instruccions.class);
-        i.putExtras(b);
-        startActivity(i);
+        System.exit(0);
     }
 }

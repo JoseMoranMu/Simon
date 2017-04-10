@@ -2,6 +2,7 @@ package com.example.jose.simon;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -30,7 +31,7 @@ public class Configuracion extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.jocsimon);
+        setContentView(R.layout.configuracion);
         b= this.getIntent().getExtras();
         initComponents();
         initSpinner();
@@ -54,6 +55,7 @@ public class Configuracion extends AppCompatActivity {
                         break;
                 }
             }
+
         });
     }
 
@@ -66,9 +68,9 @@ public class Configuracion extends AppCompatActivity {
                         android.R.layout.simple_spinner_item,
                         dadesSpinner);
         fondoSpinner.setAdapter(adaptador);
-        fondoSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        fondoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch(dadesSpinner[position]){
                     case "Negro":
                         fondo= "black";
@@ -87,6 +89,11 @@ public class Configuracion extends AppCompatActivity {
                         break;
 
                 }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
@@ -140,7 +147,6 @@ public class Configuracion extends AppCompatActivity {
                 initGame();
                 break;
             case 2:
-                initConfig();
                 break;
             case 3:
                 initInstructions();
@@ -163,15 +169,8 @@ public class Configuracion extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void initConfig() {
-        prepareBundle();
-        Intent i = new Intent(this, Instruccions.class);
-        i.putExtras(b);
-        startActivity(i);
-    }
-
 
     private void exitApp() {
-
+        System.exit(0);
     }
 }

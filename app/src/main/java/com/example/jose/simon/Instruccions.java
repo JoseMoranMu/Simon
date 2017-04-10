@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.MediaController;
@@ -17,59 +19,77 @@ public class Instruccions extends AppCompatActivity {
     VideoView videoViewer;
     VideoView videoSdcard;
     MediaController videoViewerController, videoViewerController2;
-    Button b1,b2;
+    Bundle b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.instruccions);
+        b=getIntent().getExtras();
         prepareSurface();
-        createButtons();
-    }
-
-    private void createButtons() {
-        b1 = (Button) findViewById(R.id.button1);
-        b2 =  (Button) findViewById(R.id.button2);
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                play();
-            }
-        });
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stop();
-            }
-        });
-    }
-
-    private void stop() {
-        Intent i = new Intent(this,ServicioMusica.class);
-        this.stopService(i);
-    }
-
-    private void play() {
-        Intent i = new Intent(this,ServicioMusica.class);
-        this.startService(i);
     }
 
     public void prepareSurface(){
         videoViewer = (VideoView) findViewById(R.id.videoView1);
-        videoSdcard =  (VideoView) findViewById(R.id.videoView2);
         videoViewerController = new MediaController(this,true);
         videoViewerController.setEnabled(false);
         videoViewer.setMediaController(videoViewerController);
         videoViewer.setVideoURI(Uri.parse(
-                "android.resource://com.example.jose.simon/raw/moon"
-        ));
-
-        videoViewerController2 = new MediaController(this,true);
-        videoViewerController2.setEnabled(false);
-        videoSdcard.setMediaController(videoViewerController2);
-        videoSdcard.setVideoURI(Uri.parse(
-                "android.resource://com.example.jose.simon/raw/moon2"
+                "android.resource://com.example.jose.simon/raw/tutorialsimon"
         ));
 
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, Menu.FIRST,   Menu.NONE, "Joc");
+        menu.add(0, Menu.FIRST+1, Menu.NONE, "Configuracio");
+        menu.add(0, Menu.FIRST+2, Menu.NONE, "Instruccions");
+        menu.add(0, Menu.FIRST+2, Menu.NONE, "Sortir");
+
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+
+            case 1:
+                initGame();
+                break;
+            case 2:
+                initConfig();
+                break;
+            case 3:
+                break;
+            case 4:
+                exitApp();
+                break;
+
+
+
+        }
+        return true;
+
+    }
+
+    private void initGame() {
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
+
+
+    private void initConfig() {
+        Intent i = new Intent(this, Configuracion.class);
+        i.putExtras(b);
+        startActivity(i);
+    }
+
+
+    private void exitApp() {
+        System.exit(0);
     }
 }

@@ -70,5 +70,6 @@
         android:id="@+id/guardar"
         android:layout_width="match_parent"
         android:layout_height="59dp"
-        android:text="Guardar" />
+        android:text="Guardar"
+        />
 </LinearLayout>
