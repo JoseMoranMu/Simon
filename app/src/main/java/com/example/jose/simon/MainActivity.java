@@ -52,17 +52,17 @@ public class MainActivity extends AppCompatActivity {
         tvJugador.setText("Jugador: "+b.getString("user"));
         LinearLayout prueba = (LinearLayout) findViewById(R.id.jocsimon);
         switch(b.getString("fondo")){
-            case "negro":
+            case "black":
                 prueba.setBackgroundColor(getResources().getColor(R.color.black));
                 tvPuntos.setTextColor(getResources().getColor(R.color.white));
                 tvJugador.setTextColor(getResources().getColor(R.color.white));
                 break;
-            case "azul":
+            case "blue":
                 prueba.setBackgroundColor(getResources().getColor(R.color.blue));
                 tvPuntos.setTextColor(getResources().getColor(R.color.black));
                 tvJugador.setTextColor(getResources().getColor(R.color.black));
                 break;
-            case "rojo":
+            case "red":
                 prueba.setBackgroundColor(getResources().getColor(R.color.red));
                 tvPuntos.setTextColor(getResources().getColor(R.color.black));
                 tvJugador.setTextColor(getResources().getColor(R.color.black));

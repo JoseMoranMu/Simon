@@ -44,22 +44,31 @@
 
     <RadioGroup
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="214dp"
+        android:id="@+id/grupo">
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/rocky"
             android:layout_width="wrap_content"
             android:layout_height="65dp"
-            android:text="RadioButton" />
+            android:text="Rocky" />
+
         <RadioButton
-            android:id="@+id/radio2"
+            android:id="@+id/swars"
             android:layout_width="wrap_content"
             android:layout_height="65dp"
-            android:text="RadioButton" />
+            android:text="Star Wars" />
         <RadioButton
-            android:id="@+id/radio3"
+            android:id="@+id/tetris"
             android:layout_width="wrap_content"
             android:layout_height="65dp"
-            android:text="RadioButton" />
+            android:text="Tetrix" />
+
+
     </RadioGroup>
+    <Button
+        android:id="@+id/guardar"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:text="Guardar" />
 </LinearLayout>
