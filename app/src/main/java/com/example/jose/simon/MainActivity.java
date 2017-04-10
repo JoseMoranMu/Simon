@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     boolean tornJugador=false;
     boolean jugando=true;
     ImageView ibAzul,ibRojo,ibAmarillo,ibVerde,ibPlay;
-    TextView tvPuntuacio, tvPuntos;
+    TextView tvJugador, tvPuntos;
     View.OnClickListener listenerColor;
     ArrayList<Integer> tiradesJugador = new ArrayList<>();
     ArrayList<Integer> tiradesMaquina = new ArrayList<>();
@@ -40,16 +41,54 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.jocsimon);
         prepareBundle();
         initComponents();
+        initLayout();
         createSoundPool();
         loadSounds();
         prepareListener();
 
     }
 
+    private void initLayout() {
+        tvJugador.setText("Jugador: "+b.getString("user"));
+        LinearLayout prueba = (LinearLayout) findViewById(R.id.jocsimon);
+        switch(b.getString("fondo")){
+            case "negro":
+                prueba.setBackgroundColor(getResources().getColor(R.color.black));
+                tvPuntos.setTextColor(getResources().getColor(R.color.white));
+                tvJugador.setTextColor(getResources().getColor(R.color.white));
+                break;
+            case "azul":
+                prueba.setBackgroundColor(getResources().getColor(R.color.blue));
+                tvPuntos.setTextColor(getResources().getColor(R.color.black));
+                tvJugador.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case "rojo":
+                prueba.setBackgroundColor(getResources().getColor(R.color.red));
+                tvPuntos.setTextColor(getResources().getColor(R.color.black));
+                tvJugador.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case "green":
+                prueba.setBackgroundColor(getResources().getColor(R.color.green));
+                tvPuntos.setTextColor(getResources().getColor(R.color.black));
+                tvJugador.setTextColor(getResources().getColor(R.color.black));
+                break;
+            case "yellow":
+                prueba.setBackgroundColor(getResources().getColor(R.color.yellow));
+                tvPuntos.setTextColor(getResources().getColor(R.color.black));
+                tvJugador.setTextColor(getResources().getColor(R.color.black));
+                break;
+
+        }
+    }
+
+
     private void prepareBundle() {
         b=this.getIntent().getExtras();
         if(b!=null){
             b = new Bundle();
+            b.putString("user","jugador");
+            b.putString("music","");
+            b.putString("fondo","negro");
         }
     }
 
@@ -74,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                     comprovatirada();
                 }else{
                     if (v.getId() == R.id.ibPlay){
+                        ibPlay.setVisibility(View.VISIBLE);
                         reprodueixSonsMaquina();
                     }
 
@@ -106,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         ibVerde = (ImageView) findViewById(R.id.ibVerde);
         ibPlay = (ImageView) findViewById(R.id.ibPlay);
         tvPuntos = (TextView) findViewById(R.id.tvPuntos);
-        tvPuntuacio = (TextView) findViewById(R.id.tvPuntuacio);
+        tvJugador = (TextView) findViewById(R.id.tvJugador);
     }
 
 
@@ -255,20 +295,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     ibPlay.setVisibility(View.VISIBLE);
-                    tvPuntuacio.setVisibility(View.INVISIBLE);
-                    tvPuntos.setVisibility(View.INVISIBLE);
                 }
             }, 1000);
             tiradesMaquina.clear();
             tiradesJugador.clear();
             tirada = 0;
+            tvPuntos.setText("0");
             // que vuelva a tirar la maquina 1 segundo despues si he completado aciertos
         } else if (tiradesJugador.size() == tiradesMaquina.size() && jugando == true) {
             tornJugador = false; // para controlar los onclick
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    tvPuntos.setText("" + (tiradesMaquina.size() + 1));
+                    tvPuntos.setText("Puntuacion: " + (tiradesMaquina.size()));
                     reprodueixSonsMaquina();
                     tirada = 0;
                 }
@@ -281,7 +320,12 @@ public class MainActivity extends AppCompatActivity {
     private void error() {
 
         soundPool.play(sonError, 1, 1, 0, 0, 1);
+        saveDB();
         init();
+    }
+
+    private void saveDB() {
+
     }
 
     private void init() {
